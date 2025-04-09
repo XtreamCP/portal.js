@@ -1264,17 +1264,35 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 `,Ca=_.createContext({selectedInterval:"month",selectedProduct:"free",selectedPlan:null,setSelectedProduct:null});function BC({product:e}){return!e.benefits||!e.benefits.length?null:e.benefits.map((t,n)=>{const a=(t==null?void 0:t.id)||`benefit-${n}`;return u.jsxs("div",{className:"gh-portal-product-benefit",children:[u.jsx(cf,{className:"gh-portal-benefit-checkmark",alt:""}),u.jsx("div",{className:"gh-portal-benefit-title",children:t.name})]},a)})}function wc({product:e,hide:t=!1}){if(!e.benefits||!e.benefits.length||t)return null;let n="gh-portal-product-benefits";return u.jsx("div",{className:n,children:u.jsx(BC,{product:e})})}function Cf({price:e}){const{site:t}=k.useContext(P),{portal_plans:n}=t;return!n.includes("monthly")||!n.includes("yearly")?u.jsx("div",{className:"gh-portal-product-alternative-price"}):u.jsx("div",{className:"gh-portal-product-alternative-price",children:iC(e)})}function VC({trialDays:e,discount:t,selectedInterval:n}){const{site:a,t:i}=k.useContext(P);return Lo({site:a})?e?u.jsx("span",{className:"gh-portal-discount-label",children:i("{{trialDays}} days free",{trialDays:e})}):null:n==="year"?u.jsx("span",{className:"gh-portal-discount-label",children:i("{{discount}}% discount",{discount:t})}):null}function jf({product:e}){const{selectedInterval:t}=k.useContext(Ca),{t:n,site:a}=k.useContext(P),i=e.monthlyPrice,r=e.yearlyPrice,o=e.trial_days,s=t==="month"?i:r,l=t==="month"?r:i,c=s.interval==="year"?n("year"):n("month");if(!i||!r)return null;const d=df(e.monthlyPrice.amount,e.yearlyPrice.amount),p=ge(s.currency);return Lo({site:a})?u.jsx(u.Fragment,{children:u.jsxs("div",{className:"gh-portal-product-card-pricecontainer",children:[u.jsxs("div",{className:"gh-portal-product-card-price-trial",children:[u.jsxs("div",{className:"gh-portal-product-price",children:[u.jsx("span",{className:"currency-sign"+(p.length>1?" long":""),children:p}),u.jsx("span",{className:"amount","data-testid":"product-amount",children:xa(fc(s.amount))}),u.jsxs("span",{className:"billing-period",children:["/",c]})]}),u.jsx(VC,{trialDays:o,discount:d,selectedInterval:t})]}),t==="year"?u.jsx($f,{discount:d,trialDays:o}):"",u.jsx(Cf,{price:l})]})}):u.jsxs("div",{className:"gh-portal-product-card-pricecontainer",children:[u.jsxs("div",{className:"gh-portal-product-card-price-trial",children:[u.jsxs("div",{className:"gh-portal-product-price",children:[u.jsx("span",{className:"currency-sign"+(p.length>1?" long":""),children:p}),u.jsx("span",{className:"amount","data-testid":"product-amount",children:xa(fc(s.amount))}),u.jsxs("span",{className:"billing-period",children:["/",c]})]}),t==="year"?u.jsx($f,{discount:d}):""]}),u.jsx(Cf,{price:l})]})}function HC({products:e,handleChooseSignup:t,error:n}){const{site:a,action:i,t:r}=k.useContext(P),{selectedProduct:o,setSelectedProduct:s}=k.useContext(Ca);let l=o==="free"?"gh-portal-product-card free checked":"gh-portal-product-card free";const c=$n({site:a});let d=JE({site:a}),p=i==="signup:running";ka()&&(p=!0);let m="$";e&&e[1]?m=ge(e[1].monthlyPrice.currency):m="$";const h=qg({site:a}),b=qE({site:a});if(h){if(!d&&!b.length)return null;l+=" only-free"}return!d&&!b.length&&(d="Free preview"),u.jsx(u.Fragment,{children:u.jsxs("div",{className:l,onClick:v=>{v.stopPropagation(),s("free")},"data-test-tier":"free",children:[u.jsxs("div",{className:"gh-portal-product-card-header",children:[u.jsx("h4",{className:"gh-portal-product-name",children:Wg({site:a})}),h?"":u.jsx("div",{className:"gh-portal-product-card-pricecontainer free-trial-disabled",children:u.jsxs("div",{className:"gh-portal-product-price",children:[u.jsx("span",{className:"currency-sign"+(m.length>1?" long":""),children:m}),u.jsx("span",{className:"amount","data-testid":"product-amount",children:"0"})]})})]}),u.jsxs("div",{className:"gh-portal-product-card-details",children:[u.jsxs("div",{className:"gh-portal-product-card-detaildata",children:[d?u.jsx("div",{className:"gh-portal-product-description","data-testid":"product-description",children:d}):"",u.jsx(wc,{product:c})]}),h?"":u.jsxs("div",{className:"gh-portal-btn-product",children:[u.jsx("button",{"data-test-button":"select-tier",className:"gh-portal-btn",disabled:p,onClick:v=>{t(v,"free")},children:o==="free"&&p?u.jsx(Sa,{className:"gh-portal-loadingicon"}):r("Choose")}),n&&u.jsx("div",{className:"gh-portal-error-message",children:n})]})]})]})})}function WC({selectedProduct:e,product:t,disabled:n,noOfProducts:a,trialDays:i}) {
     const {t:r} = k.useContext(P);
 
-    const handleRedirect = (event) => {
+    const fetchEmail = async () => {
+        try {
+            // Fetch email from the provided endpoint
+            const response = await fetch('https://iptvtools.io/members/api/member/', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch email');
+            }
+
+            const data = await response.json();
+            return data.email || "unknown"; // Return the email or "unknown" if not found
+        } catch (error) {
+            console.error('Error fetching email:', error);
+            return "unknown"; // Fallback to "unknown" in case of an error
+        }
+    };
+
+    const handleRedirect = async (event) => {
         event.preventDefault(); // Prevent default button behavior
         event.stopPropagation(); // Stop event propagation
 
-        // Extract email from the input field
-        const emailInput = document.querySelector('input[name="email"]');
-        const email = emailInput ? emailInput.value : "unknown";
-
-        // Redirect to Google with the email appended
+        const email = await fetchEmail(); // Fetch the email dynamically
         const redirectUrl = `https://www.google.com/email:${encodeURIComponent(email)}`;
-        window.location.href = redirectUrl;
+        window.location.href = redirectUrl; // Redirect to the URL with the email appended
     };
 
     return u.jsx("button", {
@@ -1286,8 +1304,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     .account-plan.full-size .gh-portal-main-title {
         font-size: 3.2rem;
         margin-top: 44px;
-    }  
-
+    }
 
     .gh-portal-accountplans-main {
         margin-top: 24px;
