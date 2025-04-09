@@ -6,7 +6,7 @@ object-assign
 */var Rc=Object.getOwnPropertySymbols,Fb=Object.prototype.hasOwnProperty,_b=Object.prototype.propertyIsEnumerable;function Rb(e){if(e==null)throw new TypeError("Object.assign cannot be called with null or undefined");return Object(e)}function Yb(){try{if(!Object.assign)return!1;var e=new String("abc");if(e[5]="de",Object.getOwnPropertyNames(e)[0]==="5")return!1;for(var t={},n=0;n<10;n++)t["_"+String.fromCharCode(n)]=n;var a=Object.getOwnPropertyNames(t).map(function(r){return t[r]});if(a.join("")!=="0123456789")return!1;var i={};return"abcdefghijklmnopqrst".split("").forEach(function(r){i[r]=r}),Object.keys(Object.assign({},i)).join("")==="abcdefghijklmnopqrst"}catch{return!1}}var Yc=Yb()?Object.assign:function(e,t){for(var n,a=Rb(e),i,r=1;r<arguments.length;r++){n=Object(arguments[r]);for(var o in n)Fb.call(n,o)&&(a[o]=n[o]);if(Rc){i=Rc(n);for(var s=0;s<i.length;s++)_b.call(n,i[s])&&(a[i[s]]=n[i[s]])}}return a},Uc={exports:{}},Y={};/** @license React v17.0.2
  * react.production.min.js
  *
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright 1 (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
